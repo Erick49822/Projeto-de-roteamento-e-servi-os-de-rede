@@ -1,0 +1,48 @@
+enable 
+configure terminal
+hostname SW-02
+banner motd "ACESSO APENAS PARA PESSOAS AUTORIZADAS"
+enable secret SenhadaEnable
+username erick privilege 15 secret 49822
+username ruth privilege 15 secret 49822
+username cleiton privilege 15 secret 49822
+username guilherme privilege 15 secret 49822
+username vinicius privilege 15 secret 49822
+ip domain-name peachanddaisy.local
+crypto key generate rsa general-keys modulus 1024
+line console 0
+password SenhadaConsole
+login local
+exec-timeout 10
+line vty 0 15
+transport input ssh
+login local
+exec-timeout 10
+exit
+service password-encryption
+interface vlan 100
+ip address 172.16.2.253 255.255.254.0
+description INTERFACE DE GERENCIAMENTO
+no shutdown
+exit
+ip default-gateway 172.16.2.1
+vlan 10
+exit
+interface fastEthernet 0/1
+switchport mode access
+switchport access vlan 10
+description vlan 10
+vlan 20
+exit
+interface fastEthernet 0/2
+switchport mode access
+switchport access vlan 20
+description vlan 20
+exit
+interface gigabitethernet 0/1
+switchport mode trunk
+switchport trunk native vlan 99
+switchport trunk allowed vlan 10,20,99,100
+description CONEXAO COM SWITCH-CORE
+exit
+do wr
